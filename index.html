@@ -1,1 +1,29 @@
 <h1>Kowabunga Ubuntu Packages Repository</h1>
+
+
+<html>
+  <head>
+    <title>packages.kowabunga.cloud - Kowabunga Ubuntu packages repository</title>
+  </head>head>
+  <body>
+    <p>To install Kowabunga packages, add a new repository to <code>/etc/apt/sources.list.d/kowabunga.repo.list</code>:</p>
+
+    <pre>
+deb http://packages.kowabunga.cloud/ ubuntu main
+    </pre>
+
+    <p>And import key that is used to sign the release:</p>
+
+    <pre>
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5277E8C721237125
+    </pre>
+
+    <p>After that you can install Dalet packages as any other software package:</p>
+
+    <pre>
+sudo apt-get update
+sudo apt-get install PACKAGE
+    </pre>
+
+    </body>
+</html>
