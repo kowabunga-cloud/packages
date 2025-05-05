@@ -1,5 +1,9 @@
 name: Update Ubuntu APT Repository
 
+on:
+  push:
+    branches: master
+
 jobs:
   apt-repo:
     runs-on: ubuntu-latest
