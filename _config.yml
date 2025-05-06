@@ -3,7 +3,7 @@ email: maintainers@kowabunga.cloud
 description: Ubuntu APT Repository
 baseurl: ""
 url: "https://packages.kowabunga.cloud"
-github_username: terminate-notice
+github_username: kowabunga-cloud
 
 # Build settings
 theme: minima
