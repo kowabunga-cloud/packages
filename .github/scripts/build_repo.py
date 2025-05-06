@@ -8,30 +8,36 @@ import os
 import subprocess
 from email.utils import formatdate
 
-OUTPUT_DIR = "ubuntu"
 GITHUB_BASE_API = "https://api.github.com/repos"
+
+DEFAULT_GPG_FINGERPRINT = "5277E8C721237125"
+DEFAULT_OUTPUT_DIR = "ubuntu"
+DEFAULT_PKG_LIST = ".github/config/package_list.txt"
+
 GITHUB_NAMESPACE = "kowabunga-cloud"
 GITHUB_PROJECTS = ["kowabunga", "koala"]
 
 REPO_DISTS = ["noble"]
 REPO_COMPONENT = "main"
 
-GPG_FINGERPRINT = "5277E8C721237125"
-
 # main
 if __name__ == "__main__":
     # parse command-line
     ps = argparse.ArgumentParser()
-    ps.add_argument('-o', '--output', action='store', default=OUTPUT_DIR, help='Packages repository output directory')
-    ps.add_argument('-f', '--fingerprint', action='store', default=GPG_FINGERPRINT, help='GPG Fingerprint to sign with')
+    ps.add_argument('-o', '--output', action='store', default=DEFAULT_OUTPUT_DIR, help='Packages repository output directory')
+    ps.add_argument('-c', '--config', action='store', default=DEFAULT_PKG_LIST, help='gitHub repositories to pull packages from releases')
+    ps.add_argument('-f', '--fingerprint', action='store', default=DEFAULT_GPG_FINGERPRINT, help='GPG Fingerprint to sign with')
     ps.add_argument('-p', '--passphrase', action='store', default='', help='GPG Passphrase to decrypt key')
     args = ps.parse_args()
+
+    with open(args.config, 'r') as f:
+        projects = f.read().splitlines()
 
     architectures = set()
 
     # download deb packages into pool
-    for p in GITHUB_PROJECTS:
-        releases_url = f'{GITHUB_BASE_API}/{GITHUB_NAMESPACE}/{p}/releases'
+    for p in projects:
+        releases_url = f'{GITHUB_BASE_API}/{p}/releases'
         request = urllib.request.urlopen(releases_url)
         releases = json.loads(request.read())
         for r in releases:
@@ -114,7 +120,7 @@ SHA512:
         with open('Release', "w") as f:
             f.write(release)
 
-        os.system(f'gpg --default-key "{args.fingerprint}" -abs --batch --pinentry-mode loopback --passphrase "{args.passphrase}" -o - Release > Release.gpg')
-        os.system(f'gpg --default-key "{args.fingerprint}" --clearsign --batch --pinentry-mode loopback --passphrase "{args.passphrase}" -o - Release > InRelease')
+        os.system(f'gpg --default-key "{args.fingerprint}" -abs --batch --pinentry-mode loopback --passphrase \'{args.passphrase}\' -o - Release > Release.gpg')
+        os.system(f'gpg --default-key "{args.fingerprint}" --clearsign --batch --pinentry-mode loopback --passphrase \'{args.passphrase}\' -o - Release > InRelease')
 
 sys.exit(0)
