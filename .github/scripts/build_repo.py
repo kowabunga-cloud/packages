@@ -70,8 +70,6 @@ if __name__ == "__main__":
             os.system(f'dpkg-scanpackages --arch {arch} --multiversion pool > {bindir}/Packages')
             os.system(f'gzip -9 > {bindir}/Packages.gz < {bindir}/Packages')
             os.system(f'xz -9 > {bindir}/Packages.xz < {bindir}/Packages')
-            if os.path.exists(f'{bindir}/Packages'):
-                os.remove(f'{bindir}/Packages')
 
             release = f'''Origin: Kowabunga
 Label: Kowabunga
