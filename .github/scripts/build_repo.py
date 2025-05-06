@@ -11,7 +11,7 @@ from email.utils import formatdate
 GITHUB_BASE_API = "https://api.github.com/repos"
 
 DEFAULT_GPG_FINGERPRINT = "5277E8C721237125"
-DEFAULT_OUTPUT_DIR = "ubuntu"
+DEFAULT_OUTPUT_DIR = "_site"
 DEFAULT_PKG_LIST = ".github/config/package_list.txt"
 
 GITHUB_NAMESPACE = "kowabunga-cloud"
@@ -34,6 +34,7 @@ if __name__ == "__main__":
         projects = f.read().splitlines()
 
     architectures = set()
+    rootdir = f'{args.output}/ubuntu'
 
     # download deb packages into pool
     for p in projects:
@@ -49,7 +50,7 @@ if __name__ == "__main__":
                 arch = filename.split('_')[-1].split('.')[0]
                 architectures.add(arch)
                 debfile = a.get('browser_download_url')
-                pool = f'{args.output}/pool/main'
+                pool = f'{rootdir}/pool/main'
                 if not os.path.isdir(pool):
                     os.makedirs(pool, exist_ok=True)
                 dst = f'{pool}/{filename}'
@@ -60,7 +61,7 @@ if __name__ == "__main__":
 
     # build up repository
     for d in REPO_DISTS:
-        os.chdir(args.output)
+        os.chdir(rootdir)
         for arch in architectures:
             component = f'dists/{d}/{REPO_COMPONENT}'
             bindir = f'{component}/binary-{arch}'
