@@ -43,7 +43,7 @@ jobs:
         run: sudo chown -R runner:docker _site
 
       - name: Build Ubuntu APT repository
-        run: .github/scripts/build_repo.py -f ${{ steps.import_gpg.outputs.fingerprint }} -p test
+        run: .github/scripts/build_repo.py -f ${{ steps.import_gpg.outputs.fingerprint }} -p '${{ secrets.GPG_PASSPHRASE }}'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
