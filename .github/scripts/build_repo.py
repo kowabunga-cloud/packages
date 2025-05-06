@@ -75,8 +75,8 @@ if __name__ == "__main__":
 
             release = f'''Origin: Kowabunga
 Label: Kowabunga
-Version: 1.0
-Acquire-By-Hash: no
+Archive: Kowabunga
+Suite: {d}
 Component: {REPO_COMPONENT}
 Architecture: {arch}
 '''
@@ -102,7 +102,7 @@ Architecture: {arch}
                 sha512sums.append(f' {sha512} {wc}')
         release = f'''Origin: Kowabunga
 Label: Kowabunga
-Suite: stable
+Suite: {d}
 Codename: {d}
 Version: 1.0
 Architectures: {' '.join(architectures)}
