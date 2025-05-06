@@ -1,0 +1,14 @@
+title: Kowabunga
+email: maintainers@kowabunga.cloud
+description: Ubuntu APT Repository
+baseurl: ""
+url: "https://packages.kowabunga.cloud"
+github_username: terminate-notice
+
+# Build settings
+theme: minima
+plugins:
+  - jekyll-feed
+exclude:
+  - tools/
+  - doc/
