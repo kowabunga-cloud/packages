@@ -23,7 +23,7 @@ Adding **Kowabunga** APT repository can be achieved by creating the **/etc/apt/s
 ```
 Enabled: yes
 Types: deb
-URIs: http://packages.kowabunga.cloud/ubuntu
+URIs: https://packages.kowabunga.cloud/ubuntu
 Suites: noble
 Components: main
 Signed-By: /etc/apt/keyrings/kowabunga.asc
