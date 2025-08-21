@@ -15,7 +15,11 @@ DEFAULT_OUTPUT_DIR = "_site"
 DEFAULT_PKG_LIST = ".github/config/package_list.txt"
 
 GITHUB_NAMESPACE = "kowabunga-cloud"
-GITHUB_PROJECTS = ["kowabunga", "koala"]
+GITHUB_PROJECTS = [
+    "koala",
+    "kobra",
+    "kowabunga",
+]
 
 REPO_DISTS = ["noble"]
 REPO_COMPONENT = "main"
