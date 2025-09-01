@@ -1,3 +1,4 @@
 kowabunga-cloud/koala
 kowabunga-cloud/kobra
 kowabunga-cloud/kowabunga
+kowabunga-cloud/third-party-packages
