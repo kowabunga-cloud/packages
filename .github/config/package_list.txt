@@ -1,4 +1,5 @@
 kowabunga-cloud/koala
 kowabunga-cloud/kobra
 kowabunga-cloud/kowabunga
+kowabunga-cloud/nfs-ganesha-export-api
 kowabunga-cloud/third-party-packages
