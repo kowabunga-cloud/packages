@@ -44,7 +44,8 @@ if __name__ == "__main__":
         projects = f.read().splitlines()
 
     architectures = set()
-    rootdir = f'{args.output}/ubuntu'
+    # absolute, as the working directory changes while building each dist
+    rootdir = os.path.abspath(f'{args.output}/ubuntu')
 
     # download deb packages into pool
     for p in projects:
