@@ -5,6 +5,7 @@ import json
 import urllib.request
 import sys
 import os
+import re
 import subprocess
 from email.utils import formatdate
 
@@ -21,8 +22,13 @@ GITHUB_PROJECTS = [
     "kowabunga",
 ]
 
-REPO_DISTS = ["noble"]
+REPO_DISTS = ["noble", "resolute"]
 REPO_COMPONENT = "main"
+
+# distribution-specific packages are named <name>_<version>.<dist>_<arch>.deb,
+# others (e.g. arch-independent or static binaries) <name>_<version>_<arch>.deb
+DIST_RE = re.compile(r'\.(?P<dist>[a-z]+)_[^_]+\.deb$')
+COMMON_POOL = "common"
 
 # main
 if __name__ == "__main__":
@@ -52,9 +58,17 @@ if __name__ == "__main__":
                 if not filename.endswith(".deb"):
                     continue
                 arch = filename.split('_')[-1].split('.')[0]
+                # one pool per distribution, plus a common one
+                m = DIST_RE.search(filename)
+                pool_name = COMMON_POOL
+                if m:
+                    pool_name = m.group('dist')
+                    if pool_name not in REPO_DISTS:
+                        print(f'Skipping {filename}: unsupported distribution')
+                        continue
                 architectures.add(arch)
                 debfile = a.get('browser_download_url')
-                pool = f'{rootdir}/pool/main'
+                pool = f'{rootdir}/pool/main/{pool_name}'
                 if not os.path.isdir(pool):
                     os.makedirs(pool, exist_ok=True)
                 dst = f'{pool}/{filename}'
@@ -71,7 +85,12 @@ if __name__ == "__main__":
             bindir = f'{component}/binary-{arch}'
             if not os.path.isdir(bindir):
                 os.makedirs(bindir, exist_ok=True)
-            os.system(f'dpkg-scanpackages --arch {arch} --multiversion pool > {bindir}/Packages')
+            # distribution-specific packages, then common ones
+            with open(f'{bindir}/Packages', 'w'):
+                pass
+            for pool in [f'pool/main/{d}', f'pool/main/{COMMON_POOL}']:
+                if os.path.isdir(pool):
+                    os.system(f'dpkg-scanpackages --arch {arch} --multiversion {pool} >> {bindir}/Packages')
             os.system(f'gzip -9 > {bindir}/Packages.gz < {bindir}/Packages')
             os.system(f'xz -9 > {bindir}/Packages.xz < {bindir}/Packages')
 
