@@ -40,15 +40,22 @@ if __name__ == "__main__":
     ps.add_argument('-p', '--passphrase', action='store', default='', help='GPG Passphrase to decrypt key')
     args = ps.parse_args()
 
+    # one project per line, optionally followed by the distribution its
+    # packages without distribution in their name are built for (e.g. older
+    # releases), instead of being published to all distributions
+    projects = {}
     with open(args.config, 'r') as f:
-        projects = f.read().splitlines()
+        for line in f.read().splitlines():
+            fields = line.split()
+            if fields:
+                projects[fields[0]] = fields[1] if len(fields) > 1 else None
 
     architectures = set()
     # absolute, as the working directory changes while building each dist
     rootdir = os.path.abspath(f'{args.output}/ubuntu')
 
     # download deb packages into pool
-    for p in projects:
+    for p, default_dist in projects.items():
         releases_url = f'{GITHUB_BASE_API}/{p}/releases'
         request = urllib.request.urlopen(releases_url)
         releases = json.loads(request.read())
@@ -61,12 +68,12 @@ if __name__ == "__main__":
                 arch = filename.split('_')[-1].split('.')[0]
                 # one pool per distribution, plus a common one
                 m = DIST_RE.search(filename)
-                pool_name = COMMON_POOL
+                pool_name = default_dist or COMMON_POOL
                 if m:
                     pool_name = m.group('dist')
-                    if pool_name not in REPO_DISTS:
-                        print(f'Skipping {filename}: unsupported distribution')
-                        continue
+                if pool_name != COMMON_POOL and pool_name not in REPO_DISTS:
+                    print(f'Skipping {filename}: unsupported distribution')
+                    continue
                 architectures.add(arch)
                 debfile = a.get('browser_download_url')
                 pool = f'{rootdir}/pool/main/{pool_name}'

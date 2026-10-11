@@ -3,8 +3,8 @@ kowabunga-cloud/kaktus
 kowabunga-cloud/kawaii
 kowabunga-cloud/kiwi
 kowabunga-cloud/koala
-kowabunga-cloud/kobra
+kowabunga-cloud/kobra noble
 kowabunga-cloud/konvey
-kowabunga-cloud/kowabunga
+kowabunga-cloud/kowabunga noble
 kowabunga-cloud/nfs-ganesha-export-api
 kowabunga-cloud/third-party-packages
